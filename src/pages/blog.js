@@ -15,13 +15,11 @@ const Content = styled.div`
 const ArticleDate = styled.h5`
   display: inline;
   color: #606060;
-  margin-bottom: 10px;
 `
 
 const MarkerHeader = styled.h3`
   display: inline;
   border-radius: 1em 0 1em 0;
-  margin-bottom: 10px;
   background-image: linear-gradient(
     -100deg,
     rgba(255, 250, 150, 0.15),
@@ -33,7 +31,6 @@ const MarkerHeader = styled.h3`
 const ReadingTime = styled.h5`
   display: inline;
   color: #606060;
-  margin-bottom: 10px;
 `
 
 const IndexPage = ({ data }) => {
@@ -42,24 +39,30 @@ const IndexPage = ({ data }) => {
       <SEO title="Blog" />
       <Content>
         <h1>Blog</h1>
-        {data.allMarkdownRemark.edges.map(({ node }) => (
-          <div key={node.id}>
-            <Link
-              to={node.frontmatter.path}
-              css={css`
-                text-decoration: none;
-                color: inherit;
-              `}
-            >
-              <MarkerHeader>{node.frontmatter.title} </MarkerHeader>
-              <div>
-                <ArticleDate>{node.frontmatter.date}</ArticleDate>
-                <ReadingTime> - {node.fields.readingTime.text}</ReadingTime>
-              </div>
-              <p>{node.excerpt}</p>
-            </Link>
-          </div>
-        ))}
+        {data.allMarkdownRemark.edges
+          .filter(({ node }) => {
+            const rawDate = node.frontmatter.rawDate
+            const date = new Date(rawDate)
+            return date < new Date()
+          })
+          .map(({ node }) => (
+            <div key={node.id}>
+              <Link
+                to={node.frontmatter.path}
+                css={css`
+                  text-decoration: none;
+                  color: inherit;
+                `}
+              >
+                <MarkerHeader>{node.frontmatter.title} </MarkerHeader>
+                <div>
+                  <ArticleDate>{node.frontmatter.date}</ArticleDate>
+                  <ReadingTime> - {node.fields.readingTime.text}</ReadingTime>
+                </div>
+                <p>{node.excerpt}</p>
+              </Link>
+            </div>
+          ))}
       </Content>
     </Layout>
   )
@@ -74,7 +77,10 @@ export const query = graphql`
         title
       }
     }
-    allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }) {
+    allMarkdownRemark(
+      sort: { fields: [frontmatter___date], order: DESC }
+      filter: { frontmatter: { draft: { eq: false } } }
+    ) {
       totalCount
       edges {
         node {
@@ -82,6 +88,7 @@ export const query = graphql`
           frontmatter {
             title
             date(formatString: "DD MMMM, YYYY")
+            rawDate: date
             path
           }
           fields {
