@@ -1,9 +1,9 @@
 module.exports = {
   siteMetadata: {
-    title: `Julia Doe`,
-    subtitle: `software developer`,
-    description: `A minimal blog starter built with Gatsbyjs. The needed Gatsby files are included.`,
-    author: `@niklasmtj`,
+    title: `Stephen Ajulu`,
+    subtitle: `Junior Front End Web Developer & Cybersecurity Analyst `,
+    description: `My minimal log built with Gatsbyjs.`,
+    author: `@stephenajulu`,
   },
   plugins: [
     `gatsby-plugin-react-helmet`,
@@ -55,8 +55,8 @@ module.exports = {
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: `gatsby-starter-default`,
-        short_name: `starter`,
+        name: `Ajulu's Minimal Log`,
+        short_name: `Ajulu's Log`,
         start_url: `/`,
         background_color: `#663399`,
         theme_color: `#663399`,
